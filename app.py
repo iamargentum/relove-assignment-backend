@@ -33,8 +33,6 @@ def setClientName(data):
         cursor = dbConn.cursor()
         cursor.execute(f"UPDATE connected_clients SET name='{data}' WHERE sid='{request.sid}'")
         dbConn.commit()
-        cursor.close()
-        cursor = dbConn.cursor()
         result = cursor.execute(f"SELECT * FROM connected_clients")
         result = result.fetchall()
         listOfConnectedClients = serializeConnectedClientList(result)
@@ -46,6 +44,10 @@ def clientReady():
         cursor = dbConn.cursor()
         cursor.execute(f"UPDATE connected_clients SET ready={True} WHERE sid='{request.sid}'")
         dbConn.commit()
+        result = cursor.execute(f"SELECT * FROM connected_clients")
+        result = result.fetchall()
+        listOfConnectedClients = serializeConnectedClientList(result)
+        socketio.emit("updateUsersList", listOfConnectedClients)
 
 @socketio.on("disconnect")
 def clientDisconnected():
