@@ -1,6 +1,7 @@
 import sqlite3
 from flask import Flask, request
 from flask_socketio import SocketIO
+from serialize import serializeConnectedClientList
 
 OPERATION_CHOICES = [
     "ADD",
@@ -32,6 +33,12 @@ def setClientName(data):
         cursor = dbConn.cursor()
         cursor.execute(f"UPDATE connected_clients SET name='{data}' WHERE sid='{request.sid}'")
         dbConn.commit()
+        cursor.close()
+        cursor = dbConn.cursor()
+        result = cursor.execute(f"SELECT * FROM connected_clients")
+        result = result.fetchall()
+        listOfConnectedClients = serializeConnectedClientList(result)
+        socketio.emit("updateUsersList", listOfConnectedClients)
 
 @socketio.on("ready")
 def clientReady():
