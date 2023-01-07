@@ -14,7 +14,8 @@ def createQuestionAndGetAnswer(operationOptions):
     return {
         "solution": solution,
         "firstOperand": firstOperand,
-        "secondOperand": secondOperand
+        "secondOperand": secondOperand,
+        "operation": selectedOperation
     }
 
 def solveQuestion(operands, operation):
