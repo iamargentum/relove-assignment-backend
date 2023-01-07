@@ -20,6 +20,8 @@ operation = ""
 
 currentAnswer = 0
 
+submittedAnswers = []
+
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
@@ -60,7 +62,7 @@ def clientReady():
             global currentAnswer
             operandsAndAnswer = createQuestionAndGetAnswer(OPERATION_CHOICES)
             operands["first"] = operandsAndAnswer["firstOperand"]
-            operands["second"] = operandsAndAnswer["secondOperands"]
+            operands["second"] = operandsAndAnswer["secondOperand"]
             currentAnswer = operandsAndAnswer["solution"]
             socketio.emit("newQuestion", {
                 "operands": operands,
