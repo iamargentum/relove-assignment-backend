@@ -1,3 +1,22 @@
+from random import random
+
+def createQuestionAndGetAnswer(operationOptions):
+    selectedOperation = operationOptions[
+        round(3*random())
+    ]
+    print("selectedOperation is ", selectedOperation)
+    firstOperand = round(10*random())
+    secondOperand = round(10*random())
+    solution = solveQuestion({
+        "first": firstOperand,
+        "second": secondOperand
+    }, selectedOperation)
+    return {
+        "solution": solution,
+        "firstOperand": firstOperand,
+        "secondOperand": secondOperand
+    }
+
 def solveQuestion(operands, operation):
     if operation == "ADD":
         return operands["first"] + operands["second"]
