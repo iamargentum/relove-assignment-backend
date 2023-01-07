@@ -1,6 +1,7 @@
 import sqlite3
 from flask import Flask, request
 from flask_socketio import SocketIO
+from utils import createQuestionAndGetAnswer
 from serialize import serializeConnectedClientList
 
 OPERATION_CHOICES = [
@@ -16,6 +17,8 @@ operands = {
 }
 
 operation = ""
+
+currentAnswer = 0
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -48,6 +51,21 @@ def clientReady():
         result = result.fetchall()
         listOfConnectedClients = serializeConnectedClientList(result)
         socketio.emit("updateUsersList", listOfConnectedClients)
+        numClients = len(listOfConnectedClients)
+        count = 0
+        for client in listOfConnectedClients:
+            if client["ready"]:
+                count += 1
+        if count == numClients:
+            global currentAnswer
+            operandsAndAnswer = createQuestionAndGetAnswer(OPERATION_CHOICES)
+            operands["first"] = operandsAndAnswer["firstOperand"]
+            operands["second"] = operandsAndAnswer["secondOperands"]
+            currentAnswer = operandsAndAnswer["solution"]
+            socketio.emit("newQuestion", {
+                "operands": operands,
+                "operation": operandsAndAnswer["operation"]
+            })
 
 @socketio.on("disconnect")
 def clientDisconnected():
