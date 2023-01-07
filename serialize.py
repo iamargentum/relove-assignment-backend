@@ -1,9 +1,11 @@
 def serializeConnectedClient(connectedClient):
     serializedConnectedClient = {}
-    serializedConnectedClient["id"]= connectedClient.id
-    serializedConnectedClient["sid"]= connectedClient.sid
-    serializedConnectedClient["name"]= connectedClient.name
-    serializedConnectedClient["ready"]= connectedClient.ready
+    serializedConnectedClient["id"]= connectedClient[0]
+    serializedConnectedClient["sid"]= connectedClient[1]
+    serializedConnectedClient["name"]= connectedClient[2]
+    serializedConnectedClient["ready"]= connectedClient[3]
+    serializedConnectedClient["score"]= connectedClient[4]
+    return serializedConnectedClient
 
 def serializeConnectedClientList(connectedClientList):
     serializedConnectedClientList = []
